@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -92,18 +93,23 @@ namespace nJsonSchema.Console
 
 
             //get only .json files
-            var schemasFiles = sDirInfo.GetFiles().ToList().Where((f) => f.Extension.ToLower().Equals(".json")).ToList();
-            System.Console.WriteLine("found {0} json schema files", schemasFiles.Count());
+            var schemasFiles = GetDirectoryFiles(sDirInfo)
+                .Where(f => f.Extension.ToLower().Equals(".json"))
+                .ToList();
+            System.Console.WriteLine("found {0} json schema files", schemasFiles.Count);
             foreach (FileInfo schemafile in schemasFiles)
             {
                 System.Console.WriteLine("generating from {0} to", schemafile.Name);
                 try
                 {
-                    var schema = JsonSchema4.FromFileAsync(schemafile.FullName).Result;
+                    var schemaTask = JsonSchema4.FromFileAsync(schemafile.FullName);
+                    schemaTask.ConfigureAwait(false);
+                    schemaTask.Wait();
+                    var schema = schemaTask.Result;
                     //typescript
                     if (tDirInfo != null)
                     {
-                        
+
                         var generator = new TypeScriptGenerator(schema);
                         var typeScript = generator.GenerateFile();
                         Save(sDirInfo, tDirInfo, schemafile, typeScript, ".ts");
@@ -116,6 +122,13 @@ namespace nJsonSchema.Console
                         Save(sDirInfo, cDirInfo, schemafile, cSharp, ".cs");
                     }
 
+                }
+                catch (AggregateException aggregateException)
+                {
+                    System.Console.WriteLine("Exception: {0} ", aggregateException.InnerExceptions.FirstOrDefault()?.Message ??  aggregateException.Message);
+                    System.Console.WriteLine("Overstep and continue generating remaining?");
+                    if (!GetYesOrNoUserInput())
+                        return;
                 }
                 catch (Exception ex)
                 {
@@ -130,6 +143,18 @@ namespace nJsonSchema.Console
             System.Console.WriteLine("Done!");
             System.Console.WriteLine("Press any key to exit.");
             System.Console.ReadKey();
+        }
+
+        private static IEnumerable<FileInfo> GetDirectoryFiles(DirectoryInfo directoryInfo)
+        {
+            foreach (var file in directoryInfo.GetFiles())
+            {
+                yield return file;
+            }
+            foreach (var file in directoryInfo.GetDirectories().SelectMany(d => GetDirectoryFiles(d)))
+            {
+                yield return file;
+            }
         }
 
         private static void Save(DirectoryInfo source, DirectoryInfo target, FileInfo schema, string data, string fileExtension)
