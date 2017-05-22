@@ -99,7 +99,7 @@ namespace nJsonSchema.Console
                 System.Console.WriteLine("generating from {0} to", schemafile.Name);
                 try
                 {
-                    var schema = JsonSchema4.FromFile(schemafile.FullName);
+                    var schema = JsonSchema4.FromFileAsync(schemafile.FullName).Result;
                     //typescript
                     if (tDirInfo != null)
                     {
