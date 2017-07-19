@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>NJsonSchema.CodeGeneration.CLI</id>
+    <version>$version$</version>
+    <title>NJsonSchema.CodeGeneration Command Line Interface</title>
+    <authors>Marcus Specht, Georg Dangl, Sam Goldmann</authors>
+    <projectUrl>http://www.picklesdoc.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+    <description>
+        d
+    </description>
+    <summary>CLI for generating C# or Typescript from JSON Schema</summary>
+    <copyright>Copyright © 2016 Marcus Specht, Georg Dangl, Sam Goldmann and contributors</copyright>
+    <tags>JSON Schema C# JSON Code Generator</tags>
+    <releaseNotes>https://github.com/goldsam/NJsonSchema.CodeGeneration.CLI/blob/master/CHANGELOG.md</releaseNotes>
+  </metadata>
+  <files>
+    <file src="bin\Release\nJsonSchemaCodeGeneration.exe" target="tools" />
+    <file src="bin\Release\CommandLineArgumentsParser.dll" target="tools" />
+    <file src="bin\Release\ReflectionBridge.dll" target="tools" />
+    <file src="bin\Release\Newtonsoft.Json.dll" target="tools" />
+    <file src="bin\Release\NJsonSchema.dll" target="tools" />
+    <file src="bin\Release\NJsonSchema.CodeGeneration.dll" target="tools" />
+    <file src="bin\Release\NJsonSchema.CodeGeneration.CSharp.dll" target="tools" />
+    <file src="bin\Release\NJsonSchema.CodeGeneration.TypeScript.dll" target="tools" />
+  </files>
+</package>

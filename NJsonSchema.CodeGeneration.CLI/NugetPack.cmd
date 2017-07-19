@@ -1,0 +1,1 @@
+nuget pack NJsonSchema.CodeGeneration.CLI.csproj -Properties Configuration=Release 
